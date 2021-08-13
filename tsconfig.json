@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "esModuleInterop": true,
+    "target": "ES2021",
+    "lib": ["ES2021", "DOM", "DOM.Iterable", "ESNext.Array"],
+    "moduleResolution": "Node"
+  }
+}
