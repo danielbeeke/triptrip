@@ -17,7 +17,7 @@ export class LocalStorageRepository<T> extends EventTarget {
     })
   }
 
-  get (id: string) {
+  get (id: string): T {
     const item = localStorage.getItem(this.type + '-' + id)
     if (!item) throw new ErrorNotFound('Unknown object')
     return new this.classReference(JSON.parse(item))

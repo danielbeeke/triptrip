@@ -3,7 +3,7 @@ import { MediaOptions } from '../types'
 export class Media {
   
   private handle: FileSystemFileHandle  
-  private file: File
+  public file: File
   public startTime: Date
   public endTime: Date
   public type: string

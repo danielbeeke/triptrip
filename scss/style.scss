@@ -1,0 +1,16 @@
+body {
+  background-color: white;
+}
+
+.image-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+
+  canvas {
+    flex: 0 0 100px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    display: block;
+  }
+}

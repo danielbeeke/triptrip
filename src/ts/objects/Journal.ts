@@ -34,7 +34,7 @@ export class Journal implements Serializable {
     await this.indexer.execute()
   }
 
-  get chunks () {
+  get pages () {
     return this.indexer.chunks.map(chunk => new JournalPage(chunk))
   }
 

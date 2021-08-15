@@ -15,9 +15,9 @@ const journalView: RouterPage = {
         <h1>${journal.title}</h1>
 
         <ul>
-        ${[...journal.chunks.entries()].map(([index, chunk]) => html`
+        ${[...journal.pages.entries()].map(([index, journalPage]) => html`
           <li>
-            <a href=${`/journal/${this.location.params.name}/${index}`}>${chunk.title}</a>
+            <a href=${`/journal/${this.location.params.name}/${index}`}>${journalPage.title}</a>
           </li>
         `)}
         </ul>

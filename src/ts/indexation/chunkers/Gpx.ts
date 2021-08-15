@@ -12,8 +12,10 @@ export class Gpx extends ChunkerBase {
     const gpxItems = data.filter(media => media instanceof Media && media.type === 'gpx') as Array<Media>
 
     for (const gpxItem of gpxItems) {
-      const start = gpxItem.startTime
-      const end = gpxItem.endTime
+      const start = new Date(gpxItem.startTime.getTime())
+      start.setHours(start.getHours() - 1)
+      const end = new Date(gpxItem.endTime.getTime())
+      end.setHours(end.getHours() + 1)
   
       data.push({
         startTime: start,

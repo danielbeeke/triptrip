@@ -1,19 +1,15 @@
-import { Image } from './fileTypes/Image'
-import { Video } from './fileTypes/Video'
-import { Gpx } from './fileTypes/Gpx'
-
-import { Days } from './chunkers/Days'
-import { Gpx as GpxChunker } from './chunkers/Gpx'
-
+import fileTypes from './fileTypes/all'
+import chunkers from './chunkers/all'
 import { Media } from './Media'
 import { Slicer } from '../types'
 
 export class Indexer {
-  private fileTypes = [ new Image(), new Video(), new Gpx() ]
-  private chunkers = [ new Days(), new GpxChunker() ]
+  private fileTypes = Object.values(fileTypes)
+  private chunkers = Object.values(chunkers)
+
   private rootFolderHandle: FileSystemDirectoryHandle
   private data: Array<Media | Slicer> = []
-  private chunks: Array<{
+  public chunks: Array<{
     title: string,
     items: Array<Media>
   }> = []
@@ -53,32 +49,27 @@ export class Indexer {
     }
     sortData()
 
-    console.log(this.data)
+    /**
+     * Cut the chunks into arrays.
+     */
+    const chunks = []
+    let currentChunk = []
 
-    // /**
-    //  * Cut the chunks into arrays.
-    //  */
-    // const chunks = []
-    // let currentChunk = []
+    const addChunk = () => {
+      if (currentChunk.length) chunks.push(currentChunk)
+    }
 
-    // const addChunk = (item) => {
-    //   if (currentChunk.length) chunks.push({
-    //     title: item.title,
-    //     items: currentChunk,
-    //   })
-    // }
+    for (const item of this.data) {
+      if (item instanceof Media) currentChunk.push(item)
+      else {
+        addChunk()
+        currentChunk = []
+      }
+    }
 
-    // for (const item of this.data) {
-    //   if (item instanceof Media) currentChunk.push(item)
-    //   else {
-    //     addChunk(item)
-    //     currentChunk = []
-    //   }
-    // }
+    addChunk()
 
-    // addChunk(this.data[this.data.length - 1])
-
-    // this.chunks = chunks
+    this.chunks = chunks
   }
 
   toJSON () {

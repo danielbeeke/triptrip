@@ -4,18 +4,21 @@ import { journalRepository as repo } from '../repository/journalRepository'
 import { RouterPage } from '../types'
 import { ErrorNotFound } from '../core/errors'
 import { Router } from '@vaadin/router'
+import blockTypes from '../blocks/all'
 
 const journalPageView: RouterPage = {
   async render() {
     try {
       const journal = repo.get(this.location.params.name)
       await journal.index()
-      const currentChunk = journal.chunks[parseInt(this.location.params.index)]
-
-      console.log(currentChunk)
+      const journalPage = journal.pages[parseInt(this.location.params.index)]
 
       this.html`
-        <h1>${currentChunk.title}, ${journal.title}</h1>
+        <h1>${journalPage.title}, ${journal.title}</h1>
+
+        ${journalPage.blocks
+          .filter(block => block.block)
+          .map(block => blockTypes[block.block].render(block.items))}
       `
     }
     catch (exception) {

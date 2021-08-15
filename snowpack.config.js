@@ -1,6 +1,7 @@
 export default {
   mount: {
     'src': '/',
+    'scss': '/css',
   },
   routes: [
     {
@@ -9,4 +10,7 @@ export default {
       dest: '/index.html',
     },
   ],
+  plugins: [
+    '@snowpack/plugin-sass'
+  ]
 };
