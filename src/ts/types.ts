@@ -1,4 +1,5 @@
-import { Definition } from 'uce'
+import { Definition, html } from 'uce'
+import { Media } from './objects/Media'
 
 export interface Serializable {
   id: string
@@ -23,9 +24,12 @@ export type MediaOptions = {
   latitude?: number,
   longitude?: number,
   geoJSON?: {}
+  imageHash?: any,
+  rootHandle: FileSystemDirectoryHandle
 }
 
 export type Track = {
+  Duration: string,
   extra: {
     xyz: string
   }
@@ -36,4 +40,24 @@ export type Slicer = {
   startTime: Date,
   endTime: Date,
   gpx?: unknown
+}
+
+export interface Chunker {
+  chunk (data: Array<Media | Slicer>): void
+}
+
+export interface FileIndexer {
+  extensions: Array<string>
+  defaultBlock: string
+  outputType: string
+  indexFile (handle: FileSystemFileHandle, rootHandle: FileSystemDirectoryHandle): Promise<Media>
+}
+
+export interface Titler {
+  titlePart (data: Array<Media>): string
+}
+
+export interface Block {
+  blockTypes: Array<string>
+  block (items: Array<Media>)
 }

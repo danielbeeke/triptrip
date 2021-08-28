@@ -1,24 +1,22 @@
 import { FilesystemReference, FilesystemReferenceOptions } from '../vendor/FilesystemReference'
 import { Serializable } from '../types'
-import { Indexer } from '../indexation/Indexer'
+import { Indexer } from '../core/Indexer'
 import { JournalPage } from './JournalPage'
 
 export class Journal implements Serializable {
 
   public id: string
   public title: string = ''
-  private folder: FilesystemReference
+  public folder: FilesystemReference
   public indexer
 
   constructor (journalData = null) {
-    const filesystemReferenceOptions: FilesystemReferenceOptions = {
-      type: 'folder',
-      mode: 'readwrite'
-    }
-
     Object.assign(this, journalData)
 
-    this.folder = new FilesystemReference(filesystemReferenceOptions, journalData?.folder)
+    this.folder = new FilesystemReference({
+      type: 'folder',
+      mode: 'readwrite'
+    }, journalData?.folder)
   }
 
   async chooseFolder () {
@@ -35,7 +33,7 @@ export class Journal implements Serializable {
   }
 
   get pages () {
-    return this.indexer.chunks.map(chunk => new JournalPage(chunk))
+    return this.indexer.chunks.map(chunk => new JournalPage(chunk, this))
   }
 
 }

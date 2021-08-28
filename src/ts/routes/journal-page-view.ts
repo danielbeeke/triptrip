@@ -1,10 +1,17 @@
-import { html, render, define } from 'uce'
+import { define } from 'uce'
 import { t } from '../core/translation'
 import { journalRepository as repo } from '../repository/journalRepository'
 import { RouterPage } from '../types'
 import { ErrorNotFound } from '../core/errors'
 import { Router } from '@vaadin/router'
-import blockTypes from '../blocks/all'
+import { PluginManager } from '../core/PluginManager'
+import EditorJS, { ToolConstructable, ToolSettings } from '@editorjs/editorjs';
+import Header from '@editorjs/header'; 
+import List from '@editorjs/list';
+
+import { Image } from '../plugins/Image'
+import { Video } from '../plugins/Video'
+import { Gpx } from '../plugins/Gpx'
 
 const journalPageView: RouterPage = {
   async render() {
@@ -13,12 +20,36 @@ const journalPageView: RouterPage = {
       await journal.index()
       const journalPage = journal.pages[parseInt(this.location.params.index)]
 
-      this.html`
-        <h1>${journalPage.title}, ${journal.title}</h1>
+      const editor = (element) => {
+        if (element.initiated) return
 
-        ${journalPage.blocks
-          .filter(block => block.block)
-          .map(block => blockTypes[block.block].render(block.items))}
+        new EditorJS({
+          holder: element,
+          tools: { 
+            header: Header, 
+            list: List,
+            image: Image as ToolConstructable | ToolSettings<any>,
+            video: Video as ToolConstructable | ToolSettings<any>,
+            gpx: Gpx as ToolConstructable | ToolSettings<any>,
+          },
+          data: {
+            time: new Date().getTime(),
+            blocks: [{
+              type: 'header',
+              id: 'title',
+              data: {
+                text: journalPage.title
+              }
+            }, ...journalPage.blocks]
+          }
+        });
+
+        element.initiated = true
+      }
+
+      this.html`
+        <div ref=${editor}></div>
+
       `
     }
     catch (exception) {

@@ -1,3 +1,6 @@
+/**
+ * Fetches a gpx and transforms it to GeoJSON.
+ */
 export const gpxToGeoJSON = async (url: string) => {
   const response = await fetch(url)
   const xml = await response.text()

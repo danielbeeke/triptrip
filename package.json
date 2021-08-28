@@ -10,12 +10,20 @@
   "author": "",
   "license": "GPL-2.0-only",
   "devDependencies": {
+    "@editorjs/editorjs": "^2.22.2",
+    "@editorjs/header": "^2.6.1",
+    "@editorjs/list": "^1.6.2",
     "@snowpack/plugin-sass": "^1.4.0",
     "@types/wicg-file-system-access": "^2020.9.2",
     "@vaadin/router": "^1.7.4",
+    "blockhash-core": "^0.1.0",
     "exifr": "^7.1.3",
+    "imghash": "^0.0.9",
     "mediainfo.js": "^0.1.5",
+    "photoswipe": "github:dimsemenov/photoswipe#v5-beta",
+    "pica": "^7.1.0",
     "snowpack": "^3.8.6",
-    "uce": "^1.16.5"
+    "uce": "^1.16.5",
+    "uuid": "^3.4.0"
   }
 }

@@ -1,16 +1,19 @@
-import { FileTypeBase } from './FileTypeBase'
-import { Media } from '../Media'
+import { PluginBase } from '../core/PluginBase'
+import { FileIndexer, Track } from '../types'
+import { Media } from '../objects/Media'
 import MediaInfo from 'mediainfo.js'
-import { readChunk } from '../../helpers/readChunk'
-import { Track } from '../../types'
-
+import { readChunk } from '../helpers/readChunk'
 const mediainfo = await MediaInfo({ locateFile: () =>  '/wasm/MediaInfoModule.wasm'})
 
-export class Video extends FileTypeBase {
-  
-  public extensions = ['mp4']
+export class Video extends PluginBase implements FileIndexer {
 
-  public async normalize (handle: FileSystemFileHandle): Promise<Media> {
+  /**
+   * Given a fileHandle with a GPX file returns a Media object.
+   */
+  public defaultBlock = 'VideoThumbs'
+  public extensions = ['mp4']
+  public outputType = 'video'
+  public async indexFile (handle: FileSystemFileHandle, rootHandle: FileSystemDirectoryHandle): Promise<Media> {
     const file = await handle.getFile()
 
     const meta = await this.parseMeta(file)
@@ -28,18 +31,22 @@ export class Video extends FileTypeBase {
     }
 
     return new Media({
-      type: 'video',
+      type: this.outputType,
       file: file,
       handle: handle,
       startTime: startTime,
       endTime: endTime,
       duration: duration,
       longitude: longitude,
-      latitude: latitude
+      latitude: latitude,
+      rootHandle: rootHandle
     })
   }
 
-  async parseMeta (file: File) {
+  /**
+   * Given a video file returns and caches the meta data.
+   */
+  async parseMeta (file: File): Promise<Track> {
     let generalTrack = localStorage.getItem(file.name) ? JSON.parse(localStorage.getItem(file.name)) : null
 
     if (!generalTrack) {

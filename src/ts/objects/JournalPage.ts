@@ -1,28 +1,34 @@
-import { Media } from '../indexation/Media'
+import { Media } from './Media'
+import { PluginManager } from '../core/PluginManager'
+import { Journal } from './Journal'
+import { v4 } from 'uuid'
 
-import titleParts from '../indexation/titleParts/all'
-import blockTypes from '../blocks/all'
-import fileTypes from '../indexation/fileTypes/all'
 
 export class JournalPage {
   
   public items: Array<Media> = []
+  private journal: Journal
 
   public blocks = []
   
-  constructor (items: Array<Media>) {
+  constructor (items: Array<Media>, journal: Journal) {
+    this.journal = journal
     this.items = items
-    
+
     let previousType = ''
     let blockItems = []
     for (const item of this.items) {
       if (previousType !== item.type) {
         if (blockItems.length) {
-          const fileType = fileTypes[ blockItems[0].type]
+          const defaultBlock = PluginManager.getDefaultBlockByType()
+
           this.blocks.push({
-            block: fileType.defaultBlock,
+            id: v4(),
+            block: defaultBlock,
             type: blockItems[0].type,
-            items: blockItems
+            data: {
+              items: blockItems,
+            }
           })
         }
         blockItems = [item]
@@ -36,9 +42,13 @@ export class JournalPage {
   }
 
   get title () {
-    return Object.values(titleParts)
-    .map(titlePart => titlePart.title(this.items))
+    return PluginManager.titlers
+    .map(titlePart => titlePart.titlePart(this.items))
     .filter(part => part)
     .join(', ')
+  }
+
+  get handle () {
+    return this.journal.folder.folder()
   }
 }

@@ -1,12 +1,8 @@
-import fileTypes from './fileTypes/all'
-import chunkers from './chunkers/all'
-import { Media } from './Media'
+import { Media } from '../objects/Media'
 import { Slicer } from '../types'
+import { PluginManager } from './PluginManager'
 
 export class Indexer {
-  private fileTypes = Object.values(fileTypes)
-  private chunkers = Object.values(chunkers)
-
   private rootFolderHandle: FileSystemDirectoryHandle
   private data: Array<Media | Slicer> = []
   public chunks: Array<{
@@ -16,11 +12,11 @@ export class Indexer {
 
   constructor (folderHandle: FileSystemDirectoryHandle) {
     this.rootFolderHandle = folderHandle
-    this.chunkers.sort((a, b) => b.weight - a.weight)
   }
 
   async processFolder (folderHandle: FileSystemDirectoryHandle) {
     for await (const handle of folderHandle.values()) {
+      if (handle.name === '.thumbs') continue
       if (handle.kind === 'directory') await this.processFolder(handle)
       else if (handle.kind === 'file') await this.processFile(handle)
     }
@@ -28,9 +24,9 @@ export class Indexer {
 
   async processFile (handle: FileSystemFileHandle) {
     const extension = handle.name.split('.').pop().toLowerCase()
-    for (const fileType of this.fileTypes) {
-      if (fileType.match(extension)) {
-        this.data.push(await fileType.normalize(handle))
+    for (const fileType of PluginManager.fileIndexers) {
+      if (fileType.extensions.includes(extension)) {
+        this.data.push(await fileType.indexFile(handle, this.rootFolderHandle))
       }
     }
   }
@@ -43,9 +39,9 @@ export class Indexer {
      * Add strings that seperate the activities / days etc.
      * 
      */
-    for (const chunker of this.chunkers) {
+    for (const chunker of PluginManager.chunkers) {
       sortData()
-      chunker.process(this.data)
+      chunker.chunk(this.data)
     }
     sortData()
 
