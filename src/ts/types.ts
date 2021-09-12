@@ -5,12 +5,16 @@ export interface Serializable {
   id: string
 }
 
-export type RouterPage = Definition<{}, {
+export type RouterPage = {
+  onBeforeEnter?: () => void
+} & Definition<{}, {
   location: { params: { [key: string]: string } }
 }>
 
 export type MediaOptions = {
   type: string,
+  name: string,
+  filesize: number,
   file: File,
   handle: FileSystemFileHandle,
   exif?: { 
@@ -24,7 +28,7 @@ export type MediaOptions = {
   latitude?: number,
   longitude?: number,
   geoJSON?: {}
-  imageHash?: any,
+  hash?: any,
   rootHandle: FileSystemDirectoryHandle
 }
 

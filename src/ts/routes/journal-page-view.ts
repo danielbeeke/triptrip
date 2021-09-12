@@ -4,10 +4,10 @@ import { journalRepository as repo } from '../repository/journalRepository'
 import { RouterPage } from '../types'
 import { ErrorNotFound } from '../core/errors'
 import { Router } from '@vaadin/router'
-import { PluginManager } from '../core/PluginManager'
 import EditorJS, { ToolConstructable, ToolSettings } from '@editorjs/editorjs';
 import Header from '@editorjs/header'; 
 import List from '@editorjs/list';
+import { useState } from '../helpers/useState'
 
 import { Image } from '../plugins/Image'
 import { Video } from '../plugins/Video'
@@ -17,7 +17,7 @@ const journalPageView: RouterPage = {
   async render() {
     try {
       const journal = repo.get(this.location.params.name)
-      await journal.index()
+
       const journalPage = journal.pages[parseInt(this.location.params.index)]
 
       const editor = (element) => {

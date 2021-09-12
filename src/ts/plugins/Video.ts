@@ -33,7 +33,9 @@ export class Video extends PluginBase implements FileIndexer {
     return new Media({
       type: this.outputType,
       file: file,
+      name: file.name,
       handle: handle,
+      filesize: file.size,
       startTime: startTime,
       endTime: endTime,
       duration: duration,

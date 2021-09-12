@@ -48,6 +48,8 @@ export class Gpx extends PluginBase implements Chunker, FileIndexer, Titler {
     return new Media({
       type: this.outputType,
       file: file,
+      name: file.name,
+      filesize: file.size,
       handle: handle,
       geoJSON: geoJSON,
       startTime: geoJSON.properties.startTime,

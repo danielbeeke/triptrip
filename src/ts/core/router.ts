@@ -15,4 +15,4 @@ router.setRoutes([
   { path: '/journal/:name', component: 'journal-view' },
   { path: '/journal/:name/:index', component: 'journal-page-view' },
   { path: '(.*)', component: 'page-404'}
-]);
+])

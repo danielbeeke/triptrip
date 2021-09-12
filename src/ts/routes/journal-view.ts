@@ -1,39 +1,42 @@
-import { html, render, define } from 'uce'
+import { html, define } from 'uce'
 import { t } from '../core/translation'
 import { journalRepository as repo } from '../repository/journalRepository'
 import { RouterPage } from '../types'
-import { ErrorNotFound } from '../core/errors'
-import { Router } from '@vaadin/router'
+import { useState } from '../helpers/useState'
+import { useEffect } from '../helpers/useEffect'
 
 const journalView: RouterPage = {
+
   async render() {
-    try {
-      const journal = repo.get(this.location.params.name)
-      await journal.index()
+    const journal = repo.get(this.location.params.name)
+    const state = useState(this, { currentName: '' })
 
-      this.html`
-        <h1>${journal.title}</h1>
-
-        <ul>
-        ${[...journal.pages.entries()].map(([index, journalPage]) => html`
-          <li>
-            <a href=${`/journal/${this.location.params.name}/${index}`}>${journalPage.title}</a>
-          </li>
-        `)}
-        </ul>
-      `
-    }
-    catch (exception) {
-      if (exception instanceof ErrorNotFound) {
-        Router.go('/not-found')
+    useEffect(async () => {
+      const items = await journal.index()
+      for await (const item of items) {
+        state.currentName = item?.handle?.name ?? ''
+        await this.render()
       }
 
-      if (exception instanceof DOMException && exception.message.includes('permissions')) {
-        Router.go('/journal')
-      }
+      await journal.save()
+      await this.render()
+    })
 
-      console.log(exception)
-    }
+    this.html`
+      <h1>${journal.title}</h1>
+
+      <h3>${journal.indexer?.chunks?.length} ${new Date().getTime()}</h3>
+
+      <h4>${state.currentName}</h4>
+
+      <ul>
+      ${[...journal.pages.entries()].map(([index, journalPage]) => html`
+        <li>
+          <a href=${`/journal/${this.location.params.name}/${index}`}>${journalPage.title}</a>
+        </li>
+      `)}
+      </ul>
+    `
   },
 }
 

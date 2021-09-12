@@ -1,0 +1,37 @@
+<mxfile host="65bd71144e">
+    <diagram id="GW-exkhWE-Jk1ta3lmuA" name="Page-1">
+        <mxGraphModel dx="1118" dy="771" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Journal setting: root folder" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="180" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Create or open journal. Journals are stored in the localStorage as a project. No problem if removed. The real data is always on disk in sqlite." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="100" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="group" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="200" y="340" width="280" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;br&gt;Indexation" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" vertex="1" parent="7">
+                    <mxGeometry width="280" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="get all files / folders and create Media objects with&amp;nbsp; hash(path, filesize) as an index. Ignore .thumbs" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="20" y="50" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="diff between old and new Media objects: cleanup" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="20" y="130" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Do (async) Iterator of all files to index them. Show progressbar" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="20" y="210" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="Create hash of filesystem state so we can have cached objects that hold the sorting, pageChunking and paragraphChunking enhanced by the setting files that may have been saved previously." style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="7">
+                    <mxGeometry x="20" y="290" width="240" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Initiate sql.js" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="260" width="280" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

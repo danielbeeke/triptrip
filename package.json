@@ -23,6 +23,7 @@
     "photoswipe": "github:dimsemenov/photoswipe#v5-beta",
     "pica": "^7.1.0",
     "snowpack": "^3.8.6",
+    "sql.js": "^1.6.1",
     "uce": "^1.16.5",
     "uuid": "^3.4.0"
   }

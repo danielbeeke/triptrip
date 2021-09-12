@@ -4,11 +4,10 @@ import { Media } from '../objects/Media'
 import { parse } from 'exifr'
 import { html } from 'uhtml/async'
 import { Thumbnailer } from '../core/Thumbnailer'
-import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js';
-import PhotoSwipe from 'photoswipe/dist/photoswipe.esm.js';
-import 'photoswipe/dist/photoswipe.css';
-import blockhash from "blockhash-core"
-import { getImageData } from "@canvas/image"
+import PhotoSwipeLightbox from 'photoswipe/dist/photoswipe-lightbox.esm.js'
+import PhotoSwipe from 'photoswipe/dist/photoswipe.esm.js'
+import { getImageHash } from '../helpers/getImageHash'
+import 'photoswipe/dist/photoswipe.css'
 
 export class Image extends PluginBase implements FileIndexer, Block {
 
@@ -24,17 +23,12 @@ export class Image extends PluginBase implements FileIndexer, Block {
 
     return new Media({
       type: this.outputType,
+      name: file.name,
       file: file,
-      imageHash: async () => {
-        const image = new globalThis.Image()
-        image.src = URL.createObjectURL(file)
-        await image.decode()
-          /** @ts-ignore */
-        const imageData = await getImageData(image)
-        return await blockhash.bmvbhash(imageData, 8)
-      },
+      filesize: file.size,
+      hash: await getImageHash(file),
       handle: handle,
-      exif: exif,
+      // exif: exif,
       startTime: new Date(file.lastModified),
       endTime: new Date(file.lastModified),
       latitude: exif.latitude,
@@ -71,5 +65,4 @@ export class Image extends PluginBase implements FileIndexer, Block {
       `)}
     </div>`
   }
-
 }
